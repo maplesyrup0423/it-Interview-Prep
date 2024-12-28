@@ -4,17 +4,21 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Practice from "./pages/Practice";
 import Tracker from "./pages/Tracker";
+import Questions from "./pages/questions";
 
 function App() {
   return (
     <Router>
       <div>
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/tracker" element={<Tracker />} />
-        </Routes>
+        <div className="pt-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/questions" element={<Questions />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/tracker" element={<Tracker />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
