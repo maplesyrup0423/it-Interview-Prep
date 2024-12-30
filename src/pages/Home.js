@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import NewsSection from "../components/NewsSection";
 import RecommendedResources from "../components/RecommendedResources";
+import SaraminJobs from "../components/SaraminJobs";
 
 const Home = () => {
   return (
@@ -55,6 +56,7 @@ const Home = () => {
         {/* 추천 리소스 섹션 */}
         <RecommendedResources />
       </div>
+      {/* <SaraminJobs keywords="백엔드" /> */}
     </div>
   );
 };

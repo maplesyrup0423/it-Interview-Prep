@@ -8,30 +8,33 @@ const RecommendedResources = () => {
       link: "https://github.com/firstcontributions/first-contributions",
     },
     {
-      title: "LeetCode",
-      description: "코딩 테스트 준비를 위한 문제 풀이 사이트입니다.",
-      link: "https://leetcode.com",
-    },
-    {
-      title: "HackerRank",
+      title: "백준 온라인 저지",
       description:
-        "다양한 알고리즘 문제와 코딩 인터뷰 연습을 제공하는 사이트입니다.",
-      link: "https://www.hackerrank.com",
+        "코딩 테스트 준비를 위한 국내 인기 알고리즘 문제 풀이 사이트입니다.",
+      link: "https://www.acmicpc.net/",
     },
     {
-      title: "기술 블로그 추천 글",
-      description: "기술 관련 다양한 주제의 글들을 읽을 수 있는 블로그입니다.",
-      link: "https://medium.com",
+      title: "프로그래머스",
+      description:
+        "국내 코딩 테스트 준비와 실전 문제 풀이에 적합한 플랫폼입니다.",
+      link: "https://programmers.co.kr/",
     },
     {
-      title: "Codewars",
-      description: "알고리즘 문제를 풀며 실력을 키울 수 있는 사이트입니다.",
-      link: "https://www.codewars.com",
+      title: "코드 스테이츠 블로그",
+      description:
+        "국내 개발자 커리어 및 기술 관련 글들을 제공하는 블로그입니다.",
+      link: "https://www.codestates.com/blog",
     },
     {
-      title: "Stack Overflow",
-      description: "프로그래밍 관련 질문과 답변을 찾을 수 있는 커뮤니티입니다.",
-      link: "https://stackoverflow.com",
+      title: "노마드 코더",
+      description:
+        "다양한 웹 개발 강의와 실습을 제공하는 한국 개발자 학습 플랫폼입니다.",
+      link: "https://nomadcoders.co/",
+    },
+    {
+      title: "생활코딩",
+      description: "초보 개발자를 위한 무료 프로그래밍 강의 자료를 제공합니다.",
+      link: "https://opentutorials.org/",
     },
   ];
 
