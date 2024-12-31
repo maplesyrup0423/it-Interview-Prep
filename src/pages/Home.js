@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import NewsSection from "../components/NewsSection";
 import RecommendedResources from "../components/RecommendedResources";
-import SaraminJobs from "../components/SaraminJobs";
+// import SaraminJobs from "../components/SaraminJobs";
 
 const Home = () => {
   return (
@@ -50,11 +50,10 @@ const Home = () => {
         </div>
       </div>
       <div className="flex space-x-6">
-        {/* IT 뉴스 섹션 */}
-        <NewsSection />
-
         {/* 추천 리소스 섹션 */}
         <RecommendedResources />
+        {/* IT 뉴스 섹션 */}
+        <NewsSection />
       </div>
       {/* <SaraminJobs keywords="백엔드" /> */}
     </div>

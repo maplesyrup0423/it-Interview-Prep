@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig"; // Firebase 설정 파일에서 auth 가져오기
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,6 +21,7 @@ const Login = ({ setUser }) => {
       setEmail("");
       setPassword("");
       setError("");
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }

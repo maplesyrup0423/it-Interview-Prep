@@ -13,7 +13,7 @@ import Tracker from "./pages/Tracker";
 import Questions from "./pages/questions";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp ";
-import Logout from "./components/Logout";
+// import Logout from "./components/Logout";
 import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -52,7 +52,7 @@ function App() {
             />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/signup" element={<SignUp setUser={setUser} />} />
-            <Route path="/logout" element={<Logout setUser={setUser} />} />
+            {/* <Route path="/logout" element={<Logout setUser={setUser} />} /> */}
           </Routes>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Logout from "./Logout";
 
 const Navbar = ({ user }) => {
   return (
@@ -21,14 +22,9 @@ const Navbar = ({ user }) => {
           {user ? (
             <>
               <span className="mr-4">
-                안녕하세요, {user.email || "사용자"}님!
+                | 안녕하세요, {user.email || "사용자"}님!
               </span>
-              <Link
-                to="/logout"
-                className="bg-red-500 px-3 py-2 rounded hover:bg-red-600"
-              >
-                로그아웃
-              </Link>
+              <Logout />
             </>
           ) : (
             <>

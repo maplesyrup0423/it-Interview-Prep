@@ -13,7 +13,14 @@ const Logout = ({ setUser }) => {
       });
   };
 
-  return <button onClick={handleLogout}>로그아웃</button>;
+  return (
+    <button
+      onClick={handleLogout}
+      className="bg-red-500 px-3 py-2 rounded hover:bg-red-600"
+    >
+      로그아웃
+    </button>
+  );
 };
 
 export default Logout;
