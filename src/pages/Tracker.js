@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { db } from "../firebaseConfig";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const Tracker = () => {
   const [companyName, setCompanyName] = useState("");
@@ -6,83 +15,95 @@ const Tracker = () => {
   const [jobLink, setJobLink] = useState("");
   const [memo, setMemo] = useState("");
   const [jobs, setJobs] = useState([]);
-  const [editIndex, setEditIndex] = useState(null); // 수정할 항목의 인덱스를 추적하는 상태
+  const [editId, setEditId] = useState(null); // Firestore 문서 ID를 추적
 
-  // 로컬스토리지에서 데이터 불러오기
+  const jobsCollectionRef = collection(db, "jobs");
+
+  // Firestore에서 데이터 가져오기
   useEffect(() => {
-    const storedJobs = JSON.parse(localStorage.getItem("jobs")) || [];
-    setJobs(storedJobs);
+    const fetchJobs = async () => {
+      const data = await getDocs(jobsCollectionRef);
+      setJobs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    fetchJobs();
   }, []);
 
-  // 데이터 저장 함수
-  const saveToLocalStorage = (updatedJobs) => {
-    localStorage.setItem("jobs", JSON.stringify(updatedJobs));
-    setJobs(updatedJobs);
-  };
-
-  // 추가 버튼 클릭 시
-  const handleAddJob = (e) => {
+  // Firestore에 데이터 추가
+  const handleAddJob = async (e) => {
     e.preventDefault();
 
     const newJob = { companyName, status, jobLink, memo };
-    const updatedJobs = [...jobs, newJob];
+    await addDoc(jobsCollectionRef, newJob);
 
-    saveToLocalStorage(updatedJobs);
+    setJobs([...jobs, { ...newJob, id: new Date().toISOString() }]);
     setCompanyName("");
     setStatus("지원중");
     setJobLink("");
     setMemo("");
   };
 
-  // 수정 버튼 클릭 시
-  const handleEditJob = (index) => {
-    const jobToEdit = jobs[index];
-    setCompanyName(jobToEdit.companyName);
-    setStatus(jobToEdit.status);
-    setJobLink(jobToEdit.jobLink);
-    setMemo(jobToEdit.memo);
-    setEditIndex(index); // 수정할 항목의 인덱스를 저장
-  };
-
-  // 수정 완료 버튼 클릭 시
-  const handleUpdateJob = (e) => {
+  // Firestore에서 데이터 수정
+  const handleUpdateJob = async (e) => {
     e.preventDefault();
 
-    const updatedJobs = [...jobs];
-    updatedJobs[editIndex] = { companyName, status, jobLink, memo }; // 수정한 항목을 업데이트
+    const jobDoc = doc(db, "jobs", editId);
+    const updatedJob = { companyName, status, jobLink, memo };
+    await updateDoc(jobDoc, updatedJob);
 
-    saveToLocalStorage(updatedJobs);
+    setJobs(
+      jobs.map((job) =>
+        job.id === editId ? { ...updatedJob, id: editId } : job
+      )
+    );
     setCompanyName("");
     setStatus("지원중");
     setJobLink("");
     setMemo("");
-    setEditIndex(null); // 수정 완료 후 인덱스 초기화
+    setEditId(null);
   };
 
-  // 수정 취소 버튼 클릭 시
+  // Firestore에서 데이터 삭제
+  const handleDeleteJob = async (id) => {
+    const jobDoc = doc(db, "jobs", id);
+    await deleteDoc(jobDoc);
+
+    setJobs(jobs.filter((job) => job.id !== id));
+  };
+
+  // 수정 모드 활성화
+  const handleEditJob = (job) => {
+    setCompanyName(job.companyName);
+    setStatus(job.status);
+    setJobLink(job.jobLink);
+    setMemo(job.memo);
+    setEditId(job.id);
+  };
+
+  // 수정 취소
   const handleCancelEdit = () => {
     setCompanyName("");
     setStatus("지원중");
     setJobLink("");
     setMemo("");
-    setEditIndex(null); // 수정 상태 취소
+    setEditId(null);
   };
 
-  // 삭제 버튼 클릭 시
-  const handleDeleteJob = (index) => {
-    const updatedJobs = jobs.filter((_, i) => i !== index);
-    saveToLocalStorage(updatedJobs);
+  // 상태 업데이트
+  const handleUpdateStatus = async (id, newStatus) => {
+    const jobDoc = doc(db, "jobs", id);
+    await updateDoc(jobDoc, { status: newStatus });
+
+    setJobs(
+      jobs.map((job) => (job.id === id ? { ...job, status: newStatus } : job))
+    );
   };
-  const handleUpdateStatus = (index, newStatus) => {
-    const updatedJobs = [...jobs];
-    updatedJobs[index].status = newStatus;
-    saveToLocalStorage(updatedJobs); // 로컬 스토리지에 업데이트된 목록 저장
-  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">취업 준비 트레커</h1>
       <form
-        onSubmit={editIndex === null ? handleAddJob : handleUpdateJob}
+        onSubmit={editId === null ? handleAddJob : handleUpdateJob}
         className="grid gap-4 mb-6"
       >
         <div className="flex gap-4">
@@ -122,7 +143,7 @@ const Tracker = () => {
         />
 
         <div className="flex gap-4">
-          {editIndex !== null && (
+          {editId && (
             <button
               type="button"
               onClick={handleCancelEdit}
@@ -135,27 +156,26 @@ const Tracker = () => {
             type="submit"
             className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
           >
-            {editIndex === null ? "추가" : "수정 완료"}{" "}
-            {/* 수정 시 버튼 텍스트 변경 */}
+            {editId === null ? "추가" : "수정 완료"}
           </button>
         </div>
       </form>
 
       <div id="job-list" className="space-y-4">
-        {jobs.map((job, index) => (
-          <div key={index} className="p-4 border border-blue-500 rounded">
+        {jobs.map((job) => (
+          <div key={job.id} className="p-4 border border-blue-500 rounded">
             <div>
               <div className="flex justify-between items-center font-semibold">
                 <span>{job.companyName}</span>
                 <div className="mt-2">
                   <button
-                    onClick={() => handleEditJob(index)}
+                    onClick={() => handleEditJob(job)}
                     className="mr-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                   >
                     수정
                   </button>
                   <button
-                    onClick={() => handleDeleteJob(index)}
+                    onClick={() => handleDeleteJob(job.id)}
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                   >
                     삭제
@@ -163,12 +183,11 @@ const Tracker = () => {
                 </div>
               </div>
 
-              {/* 상태 */}
               <div className="mt-2">
                 <label>상태: </label>
                 <select
                   value={job.status}
-                  onChange={(e) => handleUpdateStatus(index, e.target.value)}
+                  onChange={(e) => handleUpdateStatus(job.id, e.target.value)}
                   className="p-2 border border-gray-300 rounded"
                 >
                   <option value="지원중">지원중</option>
