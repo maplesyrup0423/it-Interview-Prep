@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig"; // Firebase 설정 파일에서 auth 가져오기
+import { auth, db } from "../firebaseConfig"; // Firebase 설정 파일에서 auth와 db 가져오기
+import { doc, setDoc } from "firebase/firestore"; // Firestore 관련 함수
 
 const SignUp = ({ setUser }) => {
   const [email, setEmail] = useState("");
@@ -15,7 +16,15 @@ const SignUp = ({ setUser }) => {
         email,
         password
       );
-      setUser(userCredential.user); // 회원가입 후 사용자 정보 저장
+      const user = userCredential.user;
+
+      // Firestore에 사용자 정보 추가
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        createdAt: new Date().toISOString(),
+      });
+
+      setUser(user); // 회원가입 후 사용자 정보 저장
       setEmail("");
       setPassword("");
       setError("");
@@ -23,8 +32,9 @@ const SignUp = ({ setUser }) => {
       setError(error.message);
     }
   };
+
   return (
-    <div className=" min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <div className="max-w-sm mx-auto pt-24">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
           <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">

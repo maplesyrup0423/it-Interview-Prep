@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import {
   collection,
   addDoc,
@@ -15,45 +15,62 @@ const Tracker = () => {
   const [jobLink, setJobLink] = useState("");
   const [memo, setMemo] = useState("");
   const [jobs, setJobs] = useState([]);
-  const [editId, setEditId] = useState(null); // Firestore 문서 ID를 추적
+  const [editId, setEditId] = useState(null); // 수정할 항목의 ID를 추적
 
-  const jobsCollectionRef = collection(db, "jobs");
+  const user = auth.currentUser;
 
-  // Firestore에서 데이터 가져오기
+  // Firestore에서 사용자별 데이터 불러오기
+  const fetchJobs = async () => {
+    try {
+      if (!user) return;
+      const jobsCollection = collection(db, "users", user.uid, "jobs");
+      const querySnapshot = await getDocs(jobsCollection);
+      const fetchedJobs = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setJobs(fetchedJobs);
+    } catch (error) {
+      console.error("데이터 로드 중 에러 발생:", error.message);
+      alert("데이터를 불러오지 못했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  // 컴포넌트가 마운트되면 Firestore에서 데이터 불러오기
   useEffect(() => {
-    const fetchJobs = async () => {
-      const data = await getDocs(jobsCollectionRef);
-      setJobs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    fetchJobs();
-  }, []);
+    if (user) {
+      fetchJobs();
+    }
+  }, [user]);
 
   // Firestore에 데이터 추가
   const handleAddJob = async (e) => {
     e.preventDefault();
+    if (!user) return; // 로그인이 안 된 경우 처리
 
+    const jobsCollection = collection(db, "users", user.uid, "jobs");
     const newJob = { companyName, status, jobLink, memo };
-    await addDoc(jobsCollectionRef, newJob);
+    const docRef = await addDoc(jobsCollection, newJob);
 
-    setJobs([...jobs, { ...newJob, id: new Date().toISOString() }]);
+    setJobs([...jobs, { id: docRef.id, ...newJob }]);
     setCompanyName("");
     setStatus("지원중");
     setJobLink("");
     setMemo("");
   };
 
-  // Firestore에서 데이터 수정
+  // Firestore에 데이터 업데이트
   const handleUpdateJob = async (e) => {
     e.preventDefault();
+    if (!user || !editId) return;
 
-    const jobDoc = doc(db, "jobs", editId);
+    const jobDoc = doc(db, "users", user.uid, "jobs", editId);
     const updatedJob = { companyName, status, jobLink, memo };
     await updateDoc(jobDoc, updatedJob);
 
     setJobs(
       jobs.map((job) =>
-        job.id === editId ? { ...updatedJob, id: editId } : job
+        job.id === editId ? { id: editId, ...updatedJob } : job
       )
     );
     setCompanyName("");
@@ -65,38 +82,31 @@ const Tracker = () => {
 
   // Firestore에서 데이터 삭제
   const handleDeleteJob = async (id) => {
-    const jobDoc = doc(db, "jobs", id);
+    if (!user) return;
+
+    const jobDoc = doc(db, "users", user.uid, "jobs", id);
     await deleteDoc(jobDoc);
 
     setJobs(jobs.filter((job) => job.id !== id));
   };
 
-  // 수정 모드 활성화
-  const handleEditJob = (job) => {
-    setCompanyName(job.companyName);
-    setStatus(job.status);
-    setJobLink(job.jobLink);
-    setMemo(job.memo);
-    setEditId(job.id);
+  // 수정 버튼 클릭 시
+  const handleEditJob = (id) => {
+    const jobToEdit = jobs.find((job) => job.id === id);
+    setCompanyName(jobToEdit.companyName);
+    setStatus(jobToEdit.status);
+    setJobLink(jobToEdit.jobLink);
+    setMemo(jobToEdit.memo);
+    setEditId(id);
   };
 
-  // 수정 취소
+  // 수정 취소 버튼 클릭 시
   const handleCancelEdit = () => {
     setCompanyName("");
     setStatus("지원중");
     setJobLink("");
     setMemo("");
     setEditId(null);
-  };
-
-  // 상태 업데이트
-  const handleUpdateStatus = async (id, newStatus) => {
-    const jobDoc = doc(db, "jobs", id);
-    await updateDoc(jobDoc, { status: newStatus });
-
-    setJobs(
-      jobs.map((job) => (job.id === id ? { ...job, status: newStatus } : job))
-    );
   };
 
   return (
@@ -143,7 +153,7 @@ const Tracker = () => {
         />
 
         <div className="flex gap-4">
-          {editId && (
+          {editId !== null && (
             <button
               type="button"
               onClick={handleCancelEdit}
@@ -169,7 +179,7 @@ const Tracker = () => {
                 <span>{job.companyName}</span>
                 <div className="mt-2">
                   <button
-                    onClick={() => handleEditJob(job)}
+                    onClick={() => handleEditJob(job.id)}
                     className="mr-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                   >
                     수정
@@ -183,21 +193,13 @@ const Tracker = () => {
                 </div>
               </div>
 
+              {/* 상태 */}
               <div className="mt-2">
                 <label>상태: </label>
-                <select
-                  value={job.status}
-                  onChange={(e) => handleUpdateStatus(job.id, e.target.value)}
-                  className="p-2 border border-gray-300 rounded"
-                >
-                  <option value="지원중">지원중</option>
-                  <option value="면접대기">면접대기</option>
-                  <option value="합격">합격</option>
-                  <option value="불합격">불합격</option>
-                </select>
+                <span>{job.status}</span>
               </div>
               <div>
-                <label className="">채용 공고 링크: </label>
+                <label>채용 공고 링크: </label>
                 {job.jobLink ? (
                   <a
                     href={job.jobLink}
@@ -212,7 +214,7 @@ const Tracker = () => {
                 )}
               </div>
               <div>
-                <label className="">메모: </label>
+                <label>메모: </label>
                 {job.memo ? (
                   job.memo
                 ) : (
