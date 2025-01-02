@@ -89,6 +89,24 @@ const Tracker = () => {
 
     setJobs(jobs.filter((job) => job.id !== id));
   };
+  // Firestore에서 상태 업데이트
+  const handleUpdateStatus = async (id, newStatus) => {
+    if (!user) return;
+
+    try {
+      const jobDoc = doc(db, "users", user.uid, "jobs", id);
+      await updateDoc(jobDoc, { status: newStatus });
+
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job.id === id ? { ...job, status: newStatus } : job
+        )
+      );
+    } catch (error) {
+      console.error("상태 업데이트 중 에러 발생:", error.message);
+      alert("상태 업데이트에 실패했습니다.");
+    }
+  };
 
   // 수정 버튼 클릭 시
   const handleEditJob = (id) => {
@@ -196,7 +214,16 @@ const Tracker = () => {
               {/* 상태 */}
               <div className="mt-2">
                 <label>상태: </label>
-                <span>{job.status}</span>
+                <select
+                  value={job.status}
+                  onChange={(e) => handleUpdateStatus(job.id, e.target.value)}
+                  className="p-2 border border-gray-300 rounded"
+                >
+                  <option value="지원중">지원중</option>
+                  <option value="면접대기">면접대기</option>
+                  <option value="합격">합격</option>
+                  <option value="불합격">불합격</option>
+                </select>
               </div>
               <div>
                 <label>채용 공고 링크: </label>
