@@ -10,10 +10,9 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Practice from "./pages/Practice";
 import Tracker from "./pages/Tracker";
-import Questions from "./pages/Qestions";
+import Questions from "./pages/Questions";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp ";
-// import Logout from "./components/Logout";
 import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -52,7 +51,8 @@ function App() {
             />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/signup" element={<SignUp setUser={setUser} />} />
-            {/* <Route path="/logout" element={<Logout setUser={setUser} />} /> */}
+            {/* 이상한 경로로 들어오면 홈으로 리다이렉트 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>

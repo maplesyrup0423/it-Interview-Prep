@@ -103,17 +103,19 @@ const Questions = () => {
                 <p className="text-lg font-semibold">{question.question}</p>
 
                 {/* 사용자가 입력한 답변 */}
-                <textarea
-                  className="w-full mt-4 p-2 border rounded"
-                  rows="2" // 세로 길이 줄이기
-                  placeholder="당신의 답변을 입력하세요..."
-                  value={userAnswers[question.id] || ""}
-                  onChange={(e) =>
-                    handleUserAnswerChange(question.id, e.target.value)
-                  }
-                />
+                {user && (
+                  <textarea
+                    className="w-full mt-4 p-2 border rounded"
+                    rows="2" // 세로 길이 줄이기
+                    placeholder="당신의 답변을 입력하세요..."
+                    value={userAnswers[question.id] || ""}
+                    onChange={(e) =>
+                      handleUserAnswerChange(question.id, e.target.value)
+                    }
+                  />
+                )}
                 {/* 버튼들 배치 */}
-                <div className="flex justify-between mt-4">
+                <div className="flex justify-between ">
                   {/* 답변 보기 버튼 */}
                   <div className="flex items-center justify-between mt-4">
                     <button
@@ -122,16 +124,18 @@ const Questions = () => {
                     >
                       {showAnswers[question.id] ? "답변 숨기기" : "답변 보기"}
                     </button>
-                  </div>{" "}
-                  {/* 저장 버튼 */}
-                  <div className="flex justify-end mt-4">
-                    <button
-                      onClick={() => handleSaveAnswer(question.id)}
-                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    >
-                      저장
-                    </button>
                   </div>
+                  {/* 저장 버튼 */}
+                  {user && (
+                    <div className="flex justify-end mt-4">
+                      <button
+                        onClick={() => handleSaveAnswer(question.id)}
+                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                      >
+                        저장
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* 시스템의 정답 표시 */}
