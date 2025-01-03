@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logout from "./Logout";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, setUser }) => {
+  // setUser를 추가로 받아옴
   return (
     <nav className="bg-blue-500 p-4 text-white fixed top-0 left-0 w-full z-10 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
@@ -24,7 +25,7 @@ const Navbar = ({ user }) => {
               <span className="mr-4">
                 | 안녕하세요, {user.email || "사용자"}님!
               </span>
-              <Logout />
+              <Logout setUser={setUser} /> {/* setUser를 전달 */}
             </>
           ) : (
             <>

@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Practice from "./pages/Practice";
 import Tracker from "./pages/Tracker";
-import Questions from "./pages/questions";
+import Questions from "./pages/Qestions";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp ";
 // import Logout from "./components/Logout";
@@ -36,7 +36,7 @@ function App() {
   return (
     <Router>
       <div>
-        <Navbar user={user} />
+        <Navbar user={user} setUser={setUser} />
         <div className="pt-16">
           <Routes>
             <Route path="/" element={<Home />} />
