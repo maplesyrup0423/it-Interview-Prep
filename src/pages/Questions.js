@@ -105,8 +105,9 @@ const Questions = () => {
                 {/* 사용자가 입력한 답변 */}
                 {user && (
                   <textarea
-                    className="w-full mt-4 p-2 border rounded"
-                    rows="2" // 세로 길이 줄이기
+                    textarea
+                    className="w-full mt-4 p-3 border rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
+                    rows="3"
                     placeholder="당신의 답변을 입력하세요..."
                     value={userAnswers[question.id] || ""}
                     onChange={(e) =>
