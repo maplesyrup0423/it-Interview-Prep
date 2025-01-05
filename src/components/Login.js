@@ -28,9 +28,9 @@ const Login = ({ setUser }) => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="max-w-sm mx-auto pt-24">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
+    <div className="">
+      <div className="max-w-sm mx-auto pt-24 flex-1">
+        <div className="bg-white p-8 rounded shadow-md w-full max-w-sm border">
           <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
             로그인
           </h2>

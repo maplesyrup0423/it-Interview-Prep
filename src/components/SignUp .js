@@ -34,10 +34,10 @@ const SignUp = ({ setUser }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="">
       <div className="max-w-sm mx-auto pt-24">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-          <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+        <div className="bg-white p-8 rounded shadow-md w-full max-w-sm border">
+          <h2 className="text-2xl font-bold text-center text-blue-600 mb-6 ">
             회원가입
           </h2>
           <form onSubmit={handleSignUp} className="space-y-4">

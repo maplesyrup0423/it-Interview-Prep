@@ -1,8 +1,8 @@
 import React from "react";
 
 const Practice = () => {
-  const totalQuestions = 20; // 전체 문제 수
-  const currentQuestion = 5; // 현재 문제 번호 (예시 값)
+  const totalQuestions = 5; // 전체 문제 수
+  const currentQuestion = 2; // 현재 문제 번호 (예시 값)
 
   // 진행 비율 계산
   const progressPercentage = (currentQuestion / totalQuestions) * 100;
@@ -62,11 +62,8 @@ const Practice = () => {
           rows="3"
           placeholder="당신의 답변을 입력하세요..."
         />
-        {/* 스킵/다음 문제 버튼을 오른쪽에 배치 */}
-        <div className="flex justify-end gap-4">
-          <button className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-            스킵
-          </button>
+        {/* 다음 문제 버튼 */}
+        <div className="flex justify-end">
           <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             다음 문제
           </button>

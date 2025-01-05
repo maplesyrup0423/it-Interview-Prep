@@ -5,7 +5,7 @@ import Logout from "./Logout";
 const Navbar = ({ user, setUser }) => {
   // setUser를 추가로 받아옴
   return (
-    <nav className="bg-blue-500 p-4 text-white fixed top-0 left-0 w-full z-10 shadow-md">
+    <nav className="bg-blue-500 p-4 text-white sticky top-0 w-full z-10 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="font-bold text-xl">
           IT Interview Prep
@@ -14,7 +14,7 @@ const Navbar = ({ user, setUser }) => {
           <Link to="/questions" className="mr-4 hover:underline">
             질문 리스트
           </Link>
-          <Link to="/practice" className="mr-4 hover:underline">
+          <Link to="/practiceSetup" className="mr-4 hover:underline">
             연습 모드
           </Link>
           <Link to="/tracker" className="mr-4 hover:underline">

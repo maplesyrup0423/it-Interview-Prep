@@ -9,6 +9,7 @@ import {
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Practice from "./pages/Practice";
+import PracticeSetup from "./pages/PracticeSetup";
 import Tracker from "./pages/Tracker";
 import Questions from "./pages/Questions";
 import Login from "./components/Login";
@@ -36,25 +37,25 @@ function App() {
     <Router>
       <div>
         <Navbar user={user} setUser={setUser} />
-        <div className="pt-16">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/questions" element={<Questions />} />
-            <Route path="/practice" element={<Practice />} />
-            <Route
-              path="/tracker"
-              element={
-                <PrivateRoute>
-                  <Tracker />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route path="/signup" element={<SignUp setUser={setUser} />} />
-            {/* 이상한 경로로 들어오면 홈으로 리다이렉트 */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/questions" element={<Questions />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/practiceSetup" element={<PracticeSetup />} />
+          <Route
+            path="/tracker"
+            element={
+              <PrivateRoute>
+                <Tracker />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/signup" element={<SignUp setUser={setUser} />} />
+          {/* 이상한 경로로 들어오면 홈으로 리다이렉트 */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
     </Router>
   );
