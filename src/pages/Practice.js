@@ -43,15 +43,6 @@ const Practice = () => {
         </div>
       </div>
 
-      {/* 카테고리 선택 */}
-      <div className="mb-6">
-        <select className="border p-2 rounded w-full max-w-xs">
-          <option value="전체">전체</option>
-          <option value="백엔드">백엔드</option>
-          <option value="프론트엔드">프론트엔드</option>
-        </select>
-      </div>
-
       {/* 질문 영역 */}
       <div className="bg-gray-100 p-6 mb-6 rounded-lg shadow-md">
         <p className="text-sm text-gray-600 mb-2">카테고리: 백엔드</p>
