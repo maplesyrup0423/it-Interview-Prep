@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Practice = () => {
-  const totalQuestions = 5; // 전체 문제 수
-  const currentQuestion = 2; // 현재 문제 번호 (예시 값)
+const Practice = ({ questions }) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const totalQuestions = questions.length;
+  const currentQuestion = questions[currentQuestionIndex];
 
   // 진행 비율 계산
-  const progressPercentage = (currentQuestion / totalQuestions) * 100;
+  const progressPercentage =
+    (currentQuestionIndex + 1) * (100 / totalQuestions);
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -16,7 +25,7 @@ const Practice = () => {
         {/* 왼쪽: 진행 상태 */}
         <div className="flex flex-col items-start w-full max-w-xs">
           <p className="text-xl font-semibold">
-            진행 상황: {currentQuestion} / {totalQuestions}
+            진행 상황: {currentQuestionIndex + 1} / {totalQuestions}
           </p>
           {/* 진행 상태를 나타내는 막대 그래프 */}
           <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
@@ -45,8 +54,10 @@ const Practice = () => {
 
       {/* 질문 영역 */}
       <div className="bg-gray-100 p-6 mb-6 rounded-lg shadow-md">
-        <p className="text-sm text-gray-600 mb-2">카테고리: 백엔드</p>
-        <p className="text-lg font-semibold mb-4">RESTful API란 무엇인가요?</p>
+        <p className="text-sm text-gray-600 mb-2">
+          카테고리: {currentQuestion.category}
+        </p>
+        <p className="text-lg font-semibold mb-4">{currentQuestion.question}</p>
         {/* 답안 입력창 */}
         <textarea
           className="w-full mt-4 p-3 border rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
@@ -55,7 +66,10 @@ const Practice = () => {
         />
         {/* 다음 문제 버튼 */}
         <div className="flex justify-end">
-          <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+          <button
+            onClick={handleNextQuestion}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
             다음 문제
           </button>
         </div>

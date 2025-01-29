@@ -18,6 +18,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [selectedQuestions, setSelectedQuestions] = useState([]); // 질문 저장
 
   useEffect(() => {
     // 로그인 상태 추적
@@ -41,8 +42,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/questions" element={<Questions />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/practiceSetup" element={<PracticeSetup />} />
+          <Route
+            path="/practice"
+            element={<Practice questions={selectedQuestions} />} // 질문 전달
+          />
+          <Route
+            path="/practiceSetup"
+            element={<PracticeSetup onStart={setSelectedQuestions} />} // 질문 선택 후 저장
+          />
           <Route
             path="/tracker"
             element={
