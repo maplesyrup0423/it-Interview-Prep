@@ -19,29 +19,27 @@ const Tracker = () => {
 
   const user = auth.currentUser;
 
-  // Firestore에서 사용자별 데이터 불러오기
-  const fetchJobs = async () => {
-    try {
-      if (!user) return;
-      const jobsCollection = collection(db, "users", user.uid, "jobs");
-      const querySnapshot = await getDocs(jobsCollection);
-      const fetchedJobs = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setJobs(fetchedJobs);
-    } catch (error) {
-      console.error("데이터 로드 중 에러 발생:", error.message);
-      alert("데이터를 불러오지 못했습니다. 다시 시도해주세요.");
-    }
-  };
-
-  // 컴포넌트가 마운트되면 Firestore에서 데이터 불러오기
   useEffect(() => {
-    if (user) {
-      fetchJobs();
-    }
-  }, [user]);
+    if (!user) return;
+
+    // Firestore에서 사용자별 데이터 불러오기
+    const fetchJobs = async () => {
+      try {
+        const jobsCollection = collection(db, "users", user.uid, "jobs");
+        const querySnapshot = await getDocs(jobsCollection);
+        const fetchedJobs = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setJobs(fetchedJobs);
+      } catch (error) {
+        console.error("데이터 로드 중 에러 발생:", error.message);
+        alert("데이터를 불러오지 못했습니다. 다시 시도해주세요.");
+      }
+    };
+
+    fetchJobs();
+  }, [user]); // user가 바뀌면 다시 실행됨
 
   // Firestore에 데이터 추가
   const handleAddJob = async (e) => {
