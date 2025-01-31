@@ -44,7 +44,7 @@ function App() {
           <Route path="/questions" element={<Questions />} />
           <Route
             path="/practice"
-            element={<Practice questions={selectedQuestions} />} // 질문 전달
+            element={<Practice questions={selectedQuestions} user={user} />} // 질문 전달
           />
           <Route
             path="/practiceSetup"

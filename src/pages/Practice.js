@@ -1,10 +1,19 @@
-import React, { useState } from "react";
-
-const Practice = ({ questions }) => {
+import React, { useState, useEffect } from "react";
+import { db } from "../firebaseConfig"; // Firebase 설정 파일에서 db 가져오기
+import { collection, addDoc } from "firebase/firestore"; // Firestore 메서드
+const Practice = ({ questions, user }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+  const [userAnswers, setUserAnswers] = useState([]); // 유저의 답변 저장 상태
+  const [sessionStartTime, setSessionStartTime] = useState(null); // 세션 시작 시간
   const totalQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex];
+
+  useEffect(() => {
+    // 세션 시작 시간 기록 (첫 번째 문제 시작 시)
+    if (currentQuestionIndex === 0 && !sessionStartTime) {
+      setSessionStartTime(new Date());
+    }
+  }, [currentQuestionIndex, sessionStartTime]);
 
   // 진행 비율 계산
   const progressPercentage =
@@ -13,6 +22,39 @@ const Practice = ({ questions }) => {
   const handleNextQuestion = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handleAnswerChange = (e) => {
+    const updatedAnswers = [...userAnswers];
+    updatedAnswers[currentQuestionIndex] = e.target.value;
+    setUserAnswers(updatedAnswers);
+  };
+
+  // 전체 제출 처리
+  const handleSubmit = async () => {
+    if (!user) return;
+
+    try {
+      // 세션 데이터 저장 (sessions 컬렉션)
+      const sessionData = {
+        startTime: sessionStartTime,
+        endTime: new Date(), // 전체 제출 시, 종료 시간 기록
+        totalQuestions,
+        userAnswers: userAnswers.map((answer, index) => ({
+          question: questions[index].question, // 질문 텍스트 저장
+          answer, // 답변
+        })),
+        createdAt: new Date(),
+      };
+
+      // 세션 정보를 Firestore에 저장
+      await addDoc(collection(db, "users", user.uid, "sessions"), sessionData);
+
+      alert("모든 답변이 저장되었습니다!");
+    } catch (error) {
+      console.error("답변 저장 중 에러 발생:", error.message);
+      alert("답변 저장에 실패했습니다.");
     }
   };
 
@@ -45,7 +87,10 @@ const Practice = ({ questions }) => {
 
           {/* 전체 제출 버튼 */}
           <div>
-            <button className="px-6 py-3 bg-red-600 text-white text-lg rounded hover:bg-red-700">
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-3 bg-red-600 text-white text-lg rounded hover:bg-red-700"
+            >
               전체 제출
             </button>
           </div>
@@ -63,16 +108,20 @@ const Practice = ({ questions }) => {
           className="w-full mt-4 p-3 border rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
           rows="3"
           placeholder="당신의 답변을 입력하세요..."
+          value={userAnswers[currentQuestionIndex] || ""}
+          onChange={handleAnswerChange}
         />
         {/* 다음 문제 버튼 */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleNextQuestion}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            다음 문제
-          </button>
-        </div>
+        {currentQuestionIndex < totalQuestions - 1 && (
+          <div className="flex justify-end">
+            <button
+              onClick={handleNextQuestion}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              다음 문제
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
