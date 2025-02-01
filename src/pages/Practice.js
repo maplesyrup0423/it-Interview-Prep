@@ -29,6 +29,15 @@ const Practice = ({ questions, user }) => {
     return () => clearInterval(timerRef.current); // 타이머 정리
   }, [currentQuestionIndex]);
 
+  useEffect(() => {
+    if (
+      userAnswers &&
+      userAnswers[currentQuestionIndex]?.timeSpent !== undefined
+    ) {
+      handleSubmit();
+    }
+  }, [userAnswers]); // userAnswers 변경될 때마다 실행
+
   // 타이머 설정
   const startTimer = () => {
     clearInterval(timerRef.current); // 기존 타이머 제거
@@ -56,17 +65,14 @@ const Practice = ({ questions, user }) => {
 
   // 현재 문제에 소요된 시간 기록
   const recordTimeForCurrentQuestion = () => {
-    console.log("recordTimeForCurrentQuestion", currentQuestionIndex);
     if (questionStartTimeRef.current) {
       const questionEndTime = new Date();
       const timeSpent = (questionEndTime - questionStartTimeRef.current) / 1000; // 초 단위로 소요 시간 계산
-
       const updatedAnswers = [...userAnswers];
       updatedAnswers[currentQuestionIndex] = {
         ...updatedAnswers[currentQuestionIndex],
         timeSpent, // 소요 시간 추가
       };
-      console.log(timeSpent);
       setUserAnswers(updatedAnswers);
     }
   };
@@ -80,7 +86,6 @@ const Practice = ({ questions, user }) => {
       setMessage(""); // 메시지 초기화
     } else {
       recordTimeForCurrentQuestion();
-      handleSubmit(); // 모든 문제를 다 풀었을 경우
     }
   };
 
@@ -95,8 +100,7 @@ const Practice = ({ questions, user }) => {
 
   // 전체 제출 처리
   const handleSubmit = async () => {
-    console.log("handleSubmit");
-    console.log(userAnswers);
+    console.log("handleSubmit : userAnswers", userAnswers);
     if (!user) return;
 
     try {
