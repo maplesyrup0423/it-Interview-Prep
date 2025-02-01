@@ -11,6 +11,7 @@ const Practice = ({ questions, user }) => {
   const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [isTimeOver, setIsTimeOver] = useState(false); // 타이머 종료 여부
   const [message, setMessage] = useState(""); // 타이머 종료 메시지
+  const [isSubmitting, setIsSubmitting] = useState(false); // 제출 버튼 비활성화 상태
 
   const timerRef = useRef(null); // 타이머 저장
   const questionStartTimeRef = useRef(null); // 각 문제 시작 시간 저장
@@ -100,8 +101,10 @@ const Practice = ({ questions, user }) => {
 
   // 전체 제출 처리
   const handleSubmit = async () => {
+    if (!user || isSubmitting) return; // 중복 실행 방지
+    setIsSubmitting(true); // 버튼 비활성화
+
     console.log("handleSubmit : userAnswers", userAnswers);
-    if (!user) return;
 
     try {
       const sessionData = {
@@ -122,6 +125,8 @@ const Practice = ({ questions, user }) => {
     } catch (error) {
       console.error("답변 저장 중 에러 발생:", error.message);
       alert("답변 저장에 실패했습니다.");
+    } finally {
+      // setIsSubmitting(false); // 에러 발생 여부와 상관없이 버튼을 다시 활성화
     }
   };
 
@@ -195,6 +200,7 @@ const Practice = ({ questions, user }) => {
             <button
               onClick={handleNextQuestion}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              disabled={isSubmitting}
             >
               {currentQuestionIndex === totalQuestions - 1
                 ? "제출"
