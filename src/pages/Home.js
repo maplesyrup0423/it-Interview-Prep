@@ -19,6 +19,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto p-4">
+      {/* 명언 */}
       <div className="p-4 border rounded shadow text-center">
         <p className="text-2xl font-semibold text-gray-900 leading-relaxed">
           "{quote.message}"
