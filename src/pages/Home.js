@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NewsSection from "../components/NewsSection";
 import RecommendedResources from "../components/RecommendedResources";
 // import SaraminJobs from "../components/SaraminJobs";
+import { kadvice } from "kadvice";
 
 const Home = () => {
+  const [quote, setQuote] = useState({
+    author: "",
+    authorProfile: "",
+    message: "",
+  });
+
+  // 랜덤 명언 가져오기
+  useEffect(() => {
+    setQuote(kadvice.getOne()); // 최초 1회 실행
+  }, []);
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">
-        환영합니다! IT 면접 준비 사이트입니다.
-      </h1>
-      <p>원하는 모드를 선택하여 시작하세요.</p>
+      <div className="p-4 border rounded shadow text-center">
+        <p className="text-2xl font-semibold text-gray-900 leading-relaxed">
+          "{quote.message}"
+        </p>
+        <p className="mt-4 text-lg text-gray-700 font-medium">
+          - {quote.author}{" "}
+          <span className="text-gray-500">({quote.authorProfile})</span>
+        </p>
+      </div>
+
       {/* 안내 카드 섹션 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {/* 면접 질문 리스트 */}
