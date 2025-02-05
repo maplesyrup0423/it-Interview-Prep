@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebaseConfig"; // Firebase 설정
 import { collection, addDoc } from "firebase/firestore"; // Firestore 메서드
+import { useNavigate } from "react-router-dom";
 
 const TIMER_DURATION = 5; // 타이머 시간
 
@@ -12,12 +13,22 @@ const Practice = ({ questions, user }) => {
   const [isTimeOver, setIsTimeOver] = useState(false); // 타이머 종료 여부
   const [message, setMessage] = useState(""); // 타이머 종료 메시지
   const [isSubmitting, setIsSubmitting] = useState(false); // 제출 버튼 비활성화 상태
+  const [showResults, setShowResults] = useState(false); // 결과 화면 표시 여부
 
   const timerRef = useRef(null); // 타이머 저장
   const questionStartTimeRef = useRef(null); // 각 문제 시작 시간 저장
 
   const totalQuestions = questions.length;
   const currentQuestion = questions[currentQuestionIndex] || null;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 선택된 질문이 없으면 /practiceSetup으로 리다이렉트
+    if (questions.length === 0) {
+      navigate("/practiceSetup");
+    }
+  }, [questions, navigate]);
 
   useEffect(() => {
     if (currentQuestionIndex === 0 && !sessionStartTime) {
@@ -115,6 +126,8 @@ const Practice = ({ questions, user }) => {
           question: questions[index]?.question || "No question",
           answer: answer?.answer ?? "",
           timeSpent: answer?.timeSpent ?? -10, // 각 문제 소요 시간 포함
+          category: questions[index]?.category || "카테고리 없음", // 카테고리 추가
+          correctAnswer: questions[index]?.answer || "모범답안 없음", // 모범답안 추가
         })),
         createdAt: new Date(),
       };
@@ -122,12 +135,51 @@ const Practice = ({ questions, user }) => {
       await addDoc(collection(db, "users", user.uid, "sessions"), sessionData);
       console.log("모든 답변이 저장되었습니다!");
       alert("모든 답변이 저장되었습니다!");
+      setShowResults(true); // 결과 화면 표시
     } catch (error) {
       console.error("답변 저장 중 에러 발생:", error.message);
       alert("답변 저장에 실패했습니다.");
     } finally {
       // setIsSubmitting(false); // 에러 발생 여부와 상관없이 버튼을 다시 활성화
     }
+  };
+
+  const renderResults = () => {
+    return (
+      <div className="bg-gray-100 p-8 rounded-lg shadow-xl mx-auto mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+          연습 결과
+        </h2>
+        <div>
+          {questions.map((question, index) => (
+            <div key={index} className="mb-6 p-4 bg-white rounded-lg shadow-sm">
+              <p className="text-lg font-semibold text-gray-800 mb-2">
+                <strong>질문:</strong> {question.question}
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                <strong>카테고리:</strong> {question.category}
+              </p>
+              <div className="border-t border-gray-200 my-4"></div>
+              <p className="text-gray-600 mb-2">
+                <strong>답변:</strong> {userAnswers[index]?.answer || "없음"}
+              </p>
+              <p className="text-gray-600 mb-2">
+                <strong>모범답안:</strong> {question.answer}
+              </p>
+              <p className="text-gray-600">
+                <strong>소요 시간:</strong>{" "}
+                {userAnswers[index]?.timeSpent >= TIMER_DURATION
+                  ? `${TIMER_DURATION}초 (시간 초과)`
+                  : `${Math.max(
+                      Math.floor(userAnswers[index]?.timeSpent),
+                      1
+                    )}초`}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -152,28 +204,24 @@ const Practice = ({ questions, user }) => {
           </div>
         </div>
 
-        {/* 타이머 & 전체 제출 버튼 */}
-        <div className="flex items-center space-x-4">
-          <div className="text-xl font-semibold text-gray-800">
-            <p>
-              남은 시간: {Math.floor(timeLeft / 60)}:
-              {(timeLeft % 60).toString().padStart(2, "0")}
-            </p>
+        {/* 타이머*/}
+        {!showResults && (
+          <div className="flex items-center space-x-4">
+            <div className="text-xl font-semibold text-gray-800">
+              <p>
+                남은 시간: {Math.floor(timeLeft / 60)}:
+                {(timeLeft % 60).toString().padStart(2, "0")}
+              </p>
+            </div>
           </div>
-          {/* 
-          {currentQuestionIndex === totalQuestions - 1 && (
-            <button
-              onClick={handleSubmit}
-              className="px-6 py-3 bg-red-600 text-white text-lg rounded hover:bg-red-700"
-            >
-              전체 제출
-            </button>
-          )} */}
-        </div>
+        )}
       </div>
 
-      {/* 질문 영역 */}
-      {currentQuestion ? (
+      {/* 결과 화면 */}
+      {showResults ? (
+        renderResults()
+      ) : // 질문 영역
+      currentQuestion ? (
         <div className="bg-gray-100 p-6 mb-6 rounded-lg shadow-md">
           <p className="text-sm text-gray-600 mb-2">
             카테고리: {currentQuestion.category}
