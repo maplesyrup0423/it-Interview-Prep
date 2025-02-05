@@ -115,8 +115,6 @@ const Practice = ({ questions, user }) => {
     if (!user || isSubmitting) return; // 중복 실행 방지
     setIsSubmitting(true); // 버튼 비활성화
 
-    console.log("handleSubmit : userAnswers", userAnswers);
-
     try {
       const sessionData = {
         startTime: sessionStartTime,
@@ -134,7 +132,6 @@ const Practice = ({ questions, user }) => {
 
       await addDoc(collection(db, "users", user.uid, "sessions"), sessionData);
       console.log("모든 답변이 저장되었습니다!");
-      alert("모든 답변이 저장되었습니다!");
       setShowResults(true); // 결과 화면 표시
     } catch (error) {
       console.error("답변 저장 중 에러 발생:", error.message);
