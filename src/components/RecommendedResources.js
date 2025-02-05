@@ -14,27 +14,20 @@ const RecommendedResources = () => {
       link: "https://www.acmicpc.net/",
     },
     {
-      title: "프로그래머스",
-      description:
-        "국내 코딩 테스트 준비와 실전 문제 풀이에 적합한 플랫폼입니다.",
-      link: "https://programmers.co.kr/",
+      title: "개발자 포트폴리오",
+      description: "개발자 포트폴리오를 참고할 수 있는 사이트입니다.",
+      link: "https://maple2423-portfolio.netlify.app/",
     },
     {
-      title: "코드 스테이츠 블로그",
+      title: "개발자 GitHub",
       description:
-        "국내 개발자 커리어 및 기술 관련 글들을 제공하는 블로그입니다.",
-      link: "https://www.codestates.com/blog",
+        "개발자 GitHub 프로필에서 프로젝트와 활동을 확인할 수 있습니다.",
+      link: "https://github.com/maplesyrup0423",
     },
     {
-      title: "노마드 코더",
-      description:
-        "다양한 웹 개발 강의와 실습을 제공하는 한국 개발자 학습 플랫폼입니다.",
-      link: "https://nomadcoders.co/",
-    },
-    {
-      title: "생활코딩",
-      description: "초보 개발자를 위한 무료 프로그래밍 강의 자료를 제공합니다.",
-      link: "https://opentutorials.org/",
+      title: "코딩 타자 연습",
+      description: "타자 실력을 키울 수 있는 코딩 타자 연습 사이트입니다.",
+      link: "https://maplesyrup-devtyper.netlify.app/",
     },
   ];
 
