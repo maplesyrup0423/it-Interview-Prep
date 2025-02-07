@@ -17,6 +17,9 @@ const Navbar = ({ user, setUser }) => {
           <Link to="/practiceSetup" className="mr-4 hover:underline">
             연습 모드
           </Link>
+          <Link to="/PracticeHistory" className="mr-4 hover:underline">
+            연습 기록
+          </Link>
           <Link to="/tracker" className="mr-4 hover:underline">
             트래커
           </Link>

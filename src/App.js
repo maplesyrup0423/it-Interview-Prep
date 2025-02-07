@@ -14,6 +14,8 @@ import Tracker from "./pages/Tracker";
 import Questions from "./pages/Questions";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp ";
+import PracticeHistory from "./pages/PracticeHistory";
+import PracticeSessionDetail from "./pages/PracticeSessionDetail";
 import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
@@ -43,8 +45,28 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/questions" element={<Questions />} />
           <Route
+            path="/PracticeHistory"
+            element={
+              <PrivateRoute>
+                <PracticeHistory user={user} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/practiceHistory/:sessionId"
+            element={
+              <PrivateRoute>
+                <PracticeSessionDetail />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/practice"
-            element={<Practice questions={selectedQuestions} user={user} />} // 질문 전달
+            element={
+              <PrivateRoute>
+                <Practice questions={selectedQuestions} user={user} />
+              </PrivateRoute>
+            } // 질문 전달
           />
           <Route
             path="/practiceSetup"
