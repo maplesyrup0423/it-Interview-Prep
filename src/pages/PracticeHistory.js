@@ -4,16 +4,16 @@ import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const PracticeHistory = ({ user }) => {
-  const [sessions, setSessions] = useState([]);
+  const [history, setHistory] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
-    const fetchSessions = async () => {
-      const sessionsRef = collection(db, "users", user.uid, "sessions");
-      const q = query(sessionsRef, orderBy("createdAt", "desc"));
+    const fetchHistory = async () => {
+      const historyRef = collection(db, "users", user.uid, "user_practices");
+      const q = query(historyRef, orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
-      const sessionData = snapshot.docs.map((doc) => {
+      const historyData = snapshot.docs.map((doc) => {
         const data = doc.data();
         const duration =
           data.endTime && data.startTime
@@ -25,9 +25,9 @@ const PracticeHistory = ({ user }) => {
           duration,
         };
       });
-      setSessions(sessionData);
+      setHistory(historyData);
     };
-    fetchSessions();
+    fetchHistory();
   }, [user]);
 
   return (
@@ -36,22 +36,21 @@ const PracticeHistory = ({ user }) => {
         연습 히스토리
       </h1>
       <div className="grid grid-cols-1 gap-6">
-        {sessions.map((session) => (
+        {history.map((item) => (
           <div
-            key={session.id}
+            key={item.id}
             className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition duration-300 cursor-pointer border border-gray-200 w-full"
-            onClick={() => navigate(`/practiceHistory/${session.id}`)}
+            onClick={() => navigate(`/practiceHistory/${item.id}`)}
           >
             <p className="text-lg font-semibold text-gray-900">
-              {new Date(session.createdAt.seconds * 1000).toLocaleString()}
+              {new Date(item.createdAt.seconds * 1000).toLocaleString()}
             </p>
             <p className="text-gray-600 mt-2">
               총 질문 수:{" "}
-              <span className="font-medium">{session.totalQuestions}</span>
+              <span className="font-medium">{item.totalQuestions}</span>
             </p>
             <p className="text-gray-600">
-              소요 시간:{" "}
-              <span className="font-medium">{session.duration}초</span>
+              소요 시간: <span className="font-medium">{item.duration}초</span>
             </p>
           </div>
         ))}

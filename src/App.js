@@ -58,7 +58,7 @@ function App() {
             }
           />
           <Route
-            path="/practiceHistory/:sessionId"
+            path="/practiceHistory/:practiceId"
             element={
               <PrivateRoute>
                 <PracticeSessionDetail />

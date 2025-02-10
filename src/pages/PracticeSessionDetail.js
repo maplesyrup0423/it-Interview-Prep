@@ -5,8 +5,8 @@ import { db } from "../firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const PracticeSessionDetail = () => {
-  const { sessionId } = useParams();
-  const [session, setSession] = useState(null);
+  const { practiceId } = useParams();
+  const [practice, setPractice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
@@ -23,27 +23,33 @@ const PracticeSessionDetail = () => {
   }, []);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      if (!user) return;
+    if (!user || !practiceId) return;
+    const fetchPractice = async () => {
       try {
-        const sessionRef = doc(db, "users", user.uid, "sessions", sessionId);
-        const sessionSnap = await getDoc(sessionRef);
-        if (sessionSnap.exists()) {
-          setSession(sessionSnap.data());
+        const practiceRef = doc(
+          db,
+          "users",
+          user.uid,
+          "user_practices",
+          practiceId
+        );
+        const practiceSnap = await getDoc(practiceRef);
+        if (practiceSnap.exists()) {
+          setPractice(practiceSnap.data());
         } else {
-          console.error("해당 세션을 찾을 수 없습니다.");
+          console.error("해당 연습을 찾을 수 없습니다.");
         }
       } catch (error) {
-        console.error("세션을 불러오는 중 오류 발생:", error);
+        console.error("연습을 불러오는 중 오류 발생:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchSession();
-  }, [sessionId, user]);
+    fetchPractice();
+  }, [practiceId, user]);
 
   if (loading) return <p>로딩 중...</p>;
-  if (!session) return <p>세션을 찾을 수 없습니다.</p>;
+  if (!practice) return <p>연습을 찾을 수 없습니다.</p>;
 
   return (
     <div className="container mx-auto p-6">
@@ -53,13 +59,15 @@ const PracticeSessionDetail = () => {
         </h2>
         <p className="text-lg text-gray-700 font-medium mb-4">
           <strong>시작 시간:</strong>{" "}
-          {session.startTime.toDate().toLocaleString()}
+          {practice.startTime
+            ? practice.startTime.toDate().toLocaleString()
+            : "알 수 없음"}
         </p>
         <p className="text-lg text-gray-700 font-medium mb-6">
-          <strong>총 문제 수:</strong> {session.totalQuestions}
+          <strong>총 문제 수:</strong> {practice.totalQuestions}
         </p>
         <div>
-          {session.userAnswers.map((answer, index) => (
+          {practice.userAnswers.map((answer, index) => (
             <div
               key={index}
               className="mb-6 p-5 bg-white rounded-lg shadow-sm border border-gray-200"

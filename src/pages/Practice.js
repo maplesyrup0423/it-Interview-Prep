@@ -130,7 +130,10 @@ const Practice = ({ questions, user }) => {
         createdAt: new Date(),
       };
 
-      await addDoc(collection(db, "users", user.uid, "sessions"), sessionData);
+      await addDoc(
+        collection(db, "users", user.uid, "user_practices"),
+        sessionData
+      );
       console.log("모든 답변이 저장되었습니다!");
       setShowResults(true); // 결과 화면 표시
     } catch (error) {
