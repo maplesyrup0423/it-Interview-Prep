@@ -21,11 +21,13 @@ import { onAuthStateChanged } from "firebase/auth";
 function App() {
   const [user, setUser] = useState(null);
   const [selectedQuestions, setSelectedQuestions] = useState([]); // 질문 저장
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
     // 로그인 상태 추적
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // 로딩 완료
     });
 
     return () => unsubscribe();
@@ -33,6 +35,9 @@ function App() {
 
   // 인증된 사용자만 접근 가능한 PrivateRoute
   const PrivateRoute = ({ children }) => {
+    if (loading) {
+      return <div>로딩 중...</div>; // 로딩 중일 때는 빈 화면 혹은 스피너 표시
+    }
     return user ? children : <Navigate to="/login" />;
   };
 
