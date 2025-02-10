@@ -8,12 +8,10 @@ const PracticeSessionDetail = () => {
   const { sessionId } = useParams();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); // 사용자 정보 저장
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
-
-    // 사용자 로그인 상태 감지
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
@@ -21,18 +19,15 @@ const PracticeSessionDetail = () => {
         console.error("사용자가 로그인되지 않았습니다.");
       }
     });
-
-    return () => unsubscribe(); // Cleanup
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     const fetchSession = async () => {
-      if (!user) return; // user가 설정될 때까지 기다림
-
+      if (!user) return;
       try {
         const sessionRef = doc(db, "users", user.uid, "sessions", sessionId);
         const sessionSnap = await getDoc(sessionRef);
-
         if (sessionSnap.exists()) {
           setSession(sessionSnap.data());
         } else {
@@ -44,37 +39,52 @@ const PracticeSessionDetail = () => {
         setLoading(false);
       }
     };
-
     fetchSession();
-  }, [sessionId, user]); // user가 설정된 후 실행
+  }, [sessionId, user]);
 
   if (loading) return <p>로딩 중...</p>;
   if (!session) return <p>세션을 찾을 수 없습니다.</p>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">세션 상세 정보</h1>
-      <p>
-        <strong>시작 시간:</strong>{" "}
-        {session.startTime.toDate().toLocaleString()}
-      </p>
-      <p>
-        <strong>총 문제 수:</strong> {session.totalQuestions}
-      </p>
-      <h2 className="text-xl font-semibold mt-6">답변 기록</h2>
-      {session.userAnswers.map((answer, index) => (
-        <div key={index} className="mb-4 p-4 border rounded-lg">
-          <p>
-            <strong>질문:</strong> {answer.question}
-          </p>
-          <p>
-            <strong>답변:</strong> {answer.answer || "없음"}
-          </p>
-          <p>
-            <strong>소요 시간:</strong> {answer.timeSpent}초
-          </p>
+    <div className="container mx-auto p-6">
+      <div className="bg-gray-100 p-8 rounded-lg shadow-xl max-w-3xl mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+          연습 결과
+        </h2>
+        <p className="text-lg text-gray-700 font-medium mb-4">
+          <strong>시작 시간:</strong>{" "}
+          {session.startTime.toDate().toLocaleString()}
+        </p>
+        <p className="text-lg text-gray-700 font-medium mb-6">
+          <strong>총 문제 수:</strong> {session.totalQuestions}
+        </p>
+        <div>
+          {session.userAnswers.map((answer, index) => (
+            <div
+              key={index}
+              className="mb-6 p-5 bg-white rounded-lg shadow-sm border border-gray-200"
+            >
+              <p className="text-lg font-semibold text-gray-800 mb-2">
+                <strong>질문:</strong> {answer.question}
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                <strong>카테고리:</strong> {answer.category || "없음"}
+              </p>
+              <div className="border-t border-gray-200 my-4"></div>
+              <p className="text-gray-600 mb-2">
+                <strong>답변:</strong> {answer.answer || "없음"}
+              </p>
+              <p className="text-gray-600 mb-2">
+                <strong>모범답안:</strong>{" "}
+                {answer.correctAnswer || "제공되지 않음"}
+              </p>
+              <p className="text-gray-600">
+                <strong>소요 시간:</strong> {answer.timeSpent}초
+              </p>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };
