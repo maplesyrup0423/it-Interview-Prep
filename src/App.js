@@ -17,6 +17,7 @@ import SignUp from "./components/SignUp ";
 import PracticeHistory from "./pages/PracticeHistory";
 import PracticeSessionDetail from "./pages/PracticeSessionDetail";
 import { onAuthStateChanged } from "firebase/auth";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,10 +37,15 @@ function App() {
   // 인증된 사용자만 접근 가능한 PrivateRoute
   const PrivateRoute = ({ children }) => {
     if (loading) {
-      return <div>로딩 중...</div>; // 로딩 중일 때는 빈 화면 혹은 스피너 표시
+      return <LoadingSpinner />;
     }
     return user ? children : <Navigate to="/login" />;
   };
+
+  // 전체 로딩 상태 표시
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <Router>

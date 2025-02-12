@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import fetchITNews from "../api/newsApi"; // fetchITNews 함수 임포트
-
+import LoadingSpinner from "./LoadingSpinner";
 const NewsSection = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const NewsSection = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center mt-8">로딩 중...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

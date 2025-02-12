@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const PracticeSessionDetail = () => {
   const { practiceId } = useParams();
@@ -48,7 +49,7 @@ const PracticeSessionDetail = () => {
     fetchPractice();
   }, [practiceId, user]);
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <LoadingSpinner />;
   if (!practice) return <p>연습을 찾을 수 없습니다.</p>;
 
   return (

@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const PracticeHistory = ({ user }) => {
   const [history, setHistory] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     const fetchHistory = async () => {
+      setLoading(true);
       const historyRef = collection(db, "users", user.uid, "user_practices");
       const q = query(historyRef, orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
@@ -26,10 +29,13 @@ const PracticeHistory = ({ user }) => {
         };
       });
       setHistory(historyData);
+      setLoading(false);
     };
     fetchHistory();
   }, [user]);
-
+  if (loading) {
+    return <LoadingSpinner />; // 로딩 중일 때 로딩 스피너 표시
+  }
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
