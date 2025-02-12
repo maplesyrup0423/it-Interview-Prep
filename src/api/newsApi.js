@@ -2,7 +2,7 @@
 
 const fetchITNews = async () => {
   const apiKey = process.env.REACT_APP_NEWS_API_KEY;
-  const endpoint = `https://newsapi.org/v2/everything?q=IT%20OR%20프로그래밍%20OR%20소프트웨어&language=ko&sortBy=publishedAt&apiKey=${apiKey}`;
+  const endpoint = `https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/everything?q=IT%20OR%20프로그래밍%20OR%20소프트웨어&language=ko&sortBy=publishedAt&apiKey=${apiKey}`;
 
   try {
     const response = await fetch(endpoint);
