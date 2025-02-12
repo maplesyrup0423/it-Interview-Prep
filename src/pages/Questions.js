@@ -74,6 +74,7 @@ const Questions = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">질문 리스트</h1>
+      {!user && <h3 className=" f mb-4">로그인후 직접 답변을 작성해보세요.</h3>}
 
       {/* 카테고리 선택 */}
       <div className="mb-4">
