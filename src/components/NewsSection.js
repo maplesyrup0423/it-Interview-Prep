@@ -1,7 +1,7 @@
 // src/components/NewsSection.js
 
 import React, { useEffect, useState } from "react";
-import fetchITNews from "../api/newsApi"; // fetchITNews 함수 임포트
+import fetchITNews from "../api/MediastackAPI"; // fetchITNews 함수 임포트
 import LoadingSpinner from "./LoadingSpinner";
 const NewsSection = () => {
   const [news, setNews] = useState([]);
@@ -37,8 +37,8 @@ const NewsSection = () => {
               {article.title}
             </a>
             <p className="text-sm text-gray-500">
-              {article.source.name} -{" "}
-              {new Date(article.publishedAt).toLocaleDateString()}
+              {article.source} -{" "}
+              {new Date(article.published_at).toLocaleDateString()}
             </p>
           </li>
         ))}
