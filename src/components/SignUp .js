@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebaseConfig"; // Firebase 설정 파일에서 auth와 db 가져오기
 import { doc, setDoc } from "firebase/firestore"; // Firestore 관련 함수
-
+import GitHubLogin from "./GitHubLogin";
 const SignUp = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -81,6 +81,7 @@ const SignUp = ({ setUser }) => {
             >
               회원가입
             </button>
+            <GitHubLogin setUser={setUser} />
           </form>
           {error && (
             <p className="mt-4 text-red-500 text-sm text-center">{error}</p>

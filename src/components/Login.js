@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig"; // Firebase 설정 파일에서 auth 가져오기
 import { useNavigate } from "react-router-dom";
-
+import GitHubLogin from "./GitHubLogin";
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,6 +65,7 @@ const Login = ({ setUser }) => {
             >
               로그인
             </button>
+            <GitHubLogin setUser={setUser} />
           </form>
           {error && (
             <p className="text-red-500 text-sm text-center mt-4">{error}</p>

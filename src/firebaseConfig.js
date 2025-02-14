@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
+  GithubAuthProvider,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -21,6 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const githubProvider = new GithubAuthProvider();
 
 export {
   auth,
@@ -28,4 +30,5 @@ export {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
+  githubProvider,
 };
