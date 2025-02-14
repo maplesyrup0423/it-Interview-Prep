@@ -3,7 +3,7 @@ import { db } from "../firebaseConfig"; // Firebase 설정
 import { collection, addDoc } from "firebase/firestore"; // Firestore 메서드
 import { useNavigate } from "react-router-dom";
 
-const TIMER_DURATION = 5; // 타이머 시간
+const TIMER_DURATION = 180; // 타이머 시간
 
 const Practice = ({ questions, user }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
