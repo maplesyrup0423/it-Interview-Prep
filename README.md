@@ -10,9 +10,9 @@
 
 ## 최근 업데이트
 
-- **2025-02-12**: Firebase Hosting을 이용해 IT Interview Prep 웹사이트 임시 배포
-- **2025-02-13**: NEWS API 이슈로 mediastack API로 변경
 - **2025-02-14**: GitHub OAuth 로그인 기능 추가 및 Firebase Firestore에 사용자 데이터 저장
+- **2025-02-13**: NEWS API 이슈로 mediastack API로 변경
+- **2025-02-12**: Firebase Hosting을 이용해 IT Interview Prep 웹사이트 임시 배포
 
 ## 주요 기능 🚀
 
