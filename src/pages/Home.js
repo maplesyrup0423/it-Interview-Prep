@@ -50,7 +50,7 @@ const Home = () => {
           <p>랜덤 질문으로 실제 면접처럼 연습할 수 있는 기능입니다.</p>
           <Link
             to="/practice"
-            className="mt-4 inline-block bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600"
+            className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           >
             연습 모드 시작
           </Link>
