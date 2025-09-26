@@ -17,6 +17,27 @@ const Home = () => {
     setQuote(kadvice.getOne()); // 최초 1회 실행
   }, []);
 
+  const [term, setTerm] = useState({
+    term: "",
+    category: "",
+    description: "",
+  });
+
+  // 랜덤 IT 용어 가져오기
+  useEffect(() => {
+    const fetchTerm = async () => {
+      try {
+        const res = await fetch("https://devdict-api.vercel.app/terms/random");
+        const data = await res.json();
+        console.log("받아온 데이터:", data);
+        setTerm(data);
+      } catch (error) {
+        console.error("랜덤 IT 용어를 가져오는데 실패했습니다.", error);
+      }
+    };
+    fetchTerm();
+  }, []);
+
   return (
     <div className="container mx-auto p-4">
       {/* 명언 */}
@@ -28,6 +49,20 @@ const Home = () => {
           - {quote.author}{" "}
           <span className="text-gray-500">({quote.authorProfile})</span>
         </p>
+      </div>
+
+      {/* 랜덤 IT 용어 */}
+      <div className="p-4 border rounded shadow text-center mb-6">
+        {term.term ? (
+          <>
+            <p className="text-lg font-medium">
+              {term.term} ({term.category})
+            </p>
+            <p className="mt-2 text-gray-700">{term.description}</p>
+          </>
+        ) : (
+          <p>용어를 불러오는 중...</p>
+        )}
       </div>
 
       {/* 안내 카드 섹션 */}
