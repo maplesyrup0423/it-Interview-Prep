@@ -35,3 +35,9 @@
 ## 프로젝트 실행
 
 - `npm start` 명령어를 통해 실행합니다.
+
+<!--
+배포
+npm run build
+firebase deploy
+ -->
