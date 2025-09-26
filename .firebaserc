@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "it-interview-prep"
-  }
+  },
+  "targets": {
+    "it-interview-prep": {
+      "hosting": {
+        "app": [
+          "it-interview-prep"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

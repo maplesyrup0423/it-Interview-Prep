@@ -27,9 +27,13 @@ const Home = () => {
   useEffect(() => {
     const fetchTerm = async () => {
       try {
-        const res = await fetch("https://devdict-api.vercel.app/terms/random");
+        const url =
+          "https://api.allorigins.win/raw?url=" +
+          encodeURIComponent(
+            "https://devdict-api.vercel.app/terms/random?nocache=" + Date.now()
+          );
+        const res = await fetch(url);
         const data = await res.json();
-        console.log("받아온 데이터:", data);
         setTerm(data);
       } catch (error) {
         console.error("랜덤 IT 용어를 가져오는데 실패했습니다.", error);
@@ -42,7 +46,7 @@ const Home = () => {
     <div className="container mx-auto p-4">
       {/* 명언 */}
       <div className="p-4 border rounded shadow text-center">
-        <p className="text-2xl font-semibold text-gray-900 leading-relaxed">
+        <p className="text-xl font-semibold text-gray-900 leading-relaxed">
           "{quote.message}"
         </p>
         <p className="mt-4 text-lg text-gray-700 font-medium">
@@ -52,10 +56,10 @@ const Home = () => {
       </div>
 
       {/* 랜덤 IT 용어 */}
-      <div className="p-4 border rounded shadow text-center mb-6">
+      <div className="p-4 border rounded shadow text-center mb-6 mt-4">
         {term.term ? (
           <>
-            <p className="text-lg font-medium">
+            <p className="text-lg font-medium ">
               {term.term} ({term.category})
             </p>
             <p className="mt-2 text-gray-700">{term.description}</p>
