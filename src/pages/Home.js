@@ -59,8 +59,9 @@ const Home = () => {
       <div className="p-4 border rounded shadow text-center mb-6 mt-4">
         {term.term ? (
           <>
-            <p className="text-lg font-medium ">
-              {term.term} ({term.category})
+            <p className="text-2xl font-bold text-gray-900">
+              {term.term}{" "}
+              <span className="text-lg font-medium">({term.category})</span>
             </p>
             <p className="mt-2 text-gray-700">{term.description}</p>
           </>
